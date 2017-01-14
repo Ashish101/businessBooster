@@ -62,7 +62,9 @@ class DashboardController {
 		try {
 			def client = new RESTClient("https://api.sandbox.amadeus.com/v1.2")
 			//client.authorization = new HTTPBasicAuthorization(credUserName, credUserPassword)
-			def response = client.get(path: '/hotels/search-circle?apikey=Ae9sOKJ1iwj25Uo8ZlysnNMIw6o5Jkju&latitude=36.0857&longitude=-115.1541&radius=42&check_in=2017-01-16&check_out=2017-01-17')
+			String apiUrl = "/hotels/search-circle?apikey=" + grailsApplication.config.grails.appKey + "&check_in=" + params.check_in + "&check_out=" + params.check_out + "&latitude=" + params.latitude + "&longitude=" + params.longitude + "&radius=" + params.radius;
+			println "--------------------------------------"+apiUrl
+			def response = client.get(path: apiUrl)
 			data = DashboardUtils.createFilterMapForHotels(response)
 		}
 		catch(Exception e) {
