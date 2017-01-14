@@ -118,4 +118,22 @@ class DashboardController {
 		}
 		render data as JSON
 	}
+	
+	def interestpoints(){
+		def data = [:]
+		try {
+			def client = new RESTClient("https://api.sandbox.amadeus.com/v1.2")
+			//client.authorization = new HTTPBasicAuthorization(credUserName, credUserPassword)
+			String apiUrl = "points-of-interest/yapq-search-circle?apikey=" + grailsApplication.config.grails.appKey + "&latitude=" + params.latitude  + "&longitude=" + params.longitude + "&radius=" + params.radius;
+			println "--------------------------------------"+apiUrl
+			def response = client.get(path: apiUrl)
+			data = DashboardUtils.getInterestPoints(response)
+		}
+		catch(Exception e) {
+			e.printStackTrace()
+			data = [ status: "fail", statusCode: 400, errorMsg: e.getMessage() ]
+		}
+		render data as JSON
+
+	}
 }

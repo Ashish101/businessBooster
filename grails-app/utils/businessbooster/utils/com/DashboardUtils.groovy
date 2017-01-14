@@ -146,4 +146,24 @@ class DashboardUtils {
 			}
 			return data;
 		}
+		
+		static Map getInterestPoints(Response response){
+			def data = [:]
+			def filterMap = [:]
+			if (response.statusCode != 200) {
+				data = [ status: "fail", statusCode: 400, errorMsg: response.message ]
+			}
+			else {
+				def filterList = []
+				response?.json?.points_of_interest?.each{
+					filterMap=[:]
+					filterMap["title"] = it.title
+					filterMap["latitude"] = it.location.latitude
+					filterMap["longitude"] = it.location.longitude
+					filterMap["googleMapsLink"] = it.location.google_maps_link
+					filterList.add(filterMap)
+				}
+				data = [ status: "success", statusCode: 200, data: filterList ]
+			}
+		}
 }
