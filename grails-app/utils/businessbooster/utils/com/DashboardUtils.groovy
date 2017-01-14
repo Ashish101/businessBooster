@@ -21,10 +21,11 @@ class DashboardUtils {
 			def roomInfoList=[]
 			def finalDateRoomRateMap = [:]
 			def finalDateRoomRateList = []
+			Set room_type_codeSet = [] as Set
 			
 			response?.json?.rooms?.each{
 				//counter ++;
-				//dateRateMap = [:]
+				dateRateMap = [:]
 				roomInfoMap = [:]
 				it?.rates?.each{
 					dateRateMap[it?.start_date] = it?.price
@@ -32,12 +33,13 @@ class DashboardUtils {
 				roomInfoMap[it.room_type_code] = it.room_type_info.room_type +" " + it.room_type_info.bed_type +" " + it.room_type_info.number_of_beds
 				roomInfoList.add(roomInfoMap)
 				keysList.add(it.room_type_code)
-
+				
 
 
 				//dateRoomRateMap[] = it.room_type_code
 				def dateRateList = []
 				dateRateMap?.each {date1, rate1->
+					room_type_codeSet.add(it.room_type_code)
 					if(dateRoomRateMap[date1])
 						dateRoomRateMap[date1] << [(it.room_type_code) : rate1]
 					else
@@ -46,9 +48,29 @@ class DashboardUtils {
 				
 				
 			}
+			int setSize = room_type_codeSet.size()
+			println "Set Contents = "+room_type_codeSet+" Set Size= "+room_type_codeSet.size()
+			def tempRoomRateMap = [:]
 			dateRoomRateMap?.each {date1, roomRateMap->
 				finalDateRoomRateMap = [:]
-				finalDateRoomRateMap = roomRateMap
+				
+				if(roomRateMap.size() == setSize)
+				{
+					finalDateRoomRateMap = roomRateMap
+					tempRoomRateMap = [:]
+					tempRoomRateMap = roomRateMap
+				}
+				else
+				{
+					finalDateRoomRateMap = roomRateMap
+					room_type_codeSet?.each{key1->
+						if(!roomRateMap.containsKey(key1))
+						{
+							println ">>>>>>>>addKey"
+							roomRateMap["$key1"] = tempRoomRateMap[key1]
+						}
+					}
+				}
 				finalDateRoomRateMap["date"] = date1
 				finalDateRoomRateList.add(finalDateRoomRateMap)
 			}
