@@ -75,4 +75,29 @@ class DashboardController {
 		}
 		render data as JSON
 	}
+	
+	def filteramenities() {
+		def data = [:]
+		try {
+			def client = new RESTClient("https://api.sandbox.amadeus.com/v1.2")
+			//client.authorization = new HTTPBasicAuthorization(credUserName, credUserPassword)
+			String requiredAmenities = params.amenity
+			String [] amenitiesArr = requiredAmenities.split(",")
+			StringBuffer finalAmenities = new StringBuffer();
+			amenitiesArr?.each{
+				finalAmenities.append("&amenity=")
+				finalAmenities.append(it)
+			}
+			println "Final Amenities : " + finalAmenities
+			String apiUrl = "/hotels/search-circle?apikey=" + grailsApplication.config.grails.appKey + "&check_in=" + params.check_in + "&check_out=" + params.check_out + "&latitude=" + params.latitude + "&longitude=" + params.longitude + "&radius=" + params.radius + finalAmenities;
+			println "--------------------------------------"+apiUrl
+			def response = client.get(path: apiUrl)
+			data = DashboardUtils.createFilterMapForHotels(response)
+		}
+		catch(Exception e) {
+			e.printStackTrace()
+			data = [ status: "fail", statusCode: 400, errorMsg: e.getMessage() ]
+		}
+		render data as JSON
+	}
 }
