@@ -100,4 +100,22 @@ class DashboardController {
 		}
 		render data as JSON
 	}
+	
+	def getstatichoteldata()
+	{
+		def data = [:]
+		try {
+			def client = new RESTClient("https://api.sandbox.amadeus.com/v1.2/")
+			//client.authorization = new HTTPBasicAuthorization(credUserName, credUserPassword)
+			String apiUrl = "/hotels/"+ params.property_code + "?apikey=" + grailsApplication.config.grails.appKey + "&check_in=" + params.check_in + "&check_out=" + params.check_out;
+			def response = client.get(path: apiUrl)
+			data = DashboardUtils.staticHotelDataFilter(response)
+		}
+		catch(Exception e) {
+			e.printStackTrace()
+			data = [ status: "fail", statusCode: 400, errorMsg: e.getMessage() ]
+			
+		}
+		render data as JSON
+	}
 }

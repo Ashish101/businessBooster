@@ -108,4 +108,42 @@ class DashboardUtils {
 			data = [ status: "success", statusCode: 200, data: filterMap ]
 		}
 	}
+	
+		static Map staticHotelDataFilter(Response response){
+		
+			def data = [:]
+			def dataList = []
+			float maxRate = 0.0
+			println ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" +response.json
+			if (response.statusCode != 200) {
+				data = [ status: "fail", statusCode: 400, errorMsg: response.message ]
+			}
+			else 
+			{
+
+				def responseMap = [:]
+
+					responseMap["property_code"] = response?.json?.property_code
+					responseMap["property_name"] = response?.json?.property_name
+					responseMap["rating"] = response?.json?.awards[0]?.rating
+					responseMap["address"] = response?.json?.address
+					def amenitiesList = []
+					response?.json?.amenities?.each {amenities->
+						amenitiesList.add(amenities?.description)
+						
+					}
+					responseMap["amenitiesList"] = amenitiesList
+					responseMap["totalAmenities"] = amenitiesList.size
+					Map contactInfo = [:]
+					response?.json?.contacts?.each {contact->
+						contactInfo[contact?.type] = contact?.detail 
+						
+					}
+					responseMap["contactInfo"] = contactInfo
+				
+				data = [ status: "success", statusCode: 200, data: responseMap ]
+					
+			}
+			return data;
+		}
 }
