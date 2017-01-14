@@ -16,6 +16,7 @@ class DashboardUtils {
 			//int counter = 0
 			TreeMap dateRateMap = [:]
 			def dateRoomRateMap = [:]
+			def keysList = [] 
 			def roomInfoMap = [:]
 			response?.json?.rooms?.each{
 				//counter ++;
@@ -28,7 +29,8 @@ class DashboardUtils {
 				roomInfoMap["room_type"] = it.room_type_info.room_type
 				roomInfoMap["bed_type"] = it.room_type_info.bed_type
 				roomInfoMap["number_of_beds"] = it.room_type_info.number_of_beds
-				
+				keysList.add(it.room_type_code)
+
 
 
 				//dateRoomRateMap[] = it.room_type_code
@@ -51,7 +53,7 @@ class DashboardUtils {
 
 			}
 
-			data = [ status: "success", statusCode: 200, data: dateRoomRateMap ]
+			data = [ status: "success", statusCode: 200, keys:keysList, data:dateRoomRateMap ]
 		}
 		return data;
 	}
