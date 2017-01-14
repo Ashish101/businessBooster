@@ -9,6 +9,7 @@ class DashboardUtils {
 
 		def data = [:]
 		def dataList = []
+		float maxRate = 0.0
 		if (response.statusCode != 200) {
 			data = [ status: "fail", statusCode: 400, errorMsg: response.message ]
 		}
@@ -23,6 +24,7 @@ class DashboardUtils {
 			def finalDateRoomRateList = []
 			Set room_type_codeSet = [] as Set
 			
+			
 			response?.json?.rooms?.each{
 				//counter ++;
 				dateRateMap = [:]
@@ -33,12 +35,12 @@ class DashboardUtils {
 				roomInfoMap[it.room_type_code] = it.room_type_info.room_type +" " + it.room_type_info.bed_type +" " + it.room_type_info.number_of_beds
 				roomInfoList.add(roomInfoMap)
 				keysList.add(it.room_type_code)
-				
-
 
 				//dateRoomRateMap[] = it.room_type_code
 				def dateRateList = []
 				dateRateMap?.each {date1, rate1->
+					if(maxRate < rate1)
+						maxRate = rate1
 					room_type_codeSet.add(it.room_type_code)
 					if(dateRoomRateMap[date1])
 						dateRoomRateMap[date1] << [(it.room_type_code) : rate1]
@@ -74,7 +76,7 @@ class DashboardUtils {
 				finalDateRoomRateMap["date"] = date1
 				finalDateRoomRateList.add(finalDateRoomRateMap)
 			}
-			data = [ status: "success", statusCode: 200, keys:keysList, data:finalDateRoomRateList, roomDescList : roomInfoList ]
+			data = [ status: "success", statusCode: 200, keys:keysList, data:finalDateRoomRateList, roomDescList : roomInfoList, maxRate : maxRate ]
 		}
 		return data;
 	}
