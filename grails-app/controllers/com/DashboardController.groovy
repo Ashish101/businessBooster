@@ -8,8 +8,10 @@ import java.text.SimpleDateFormat
 import businessbooster.utils.com.DashboardUtils
 
 class DashboardController {
-	def grailsApplication
+
 	def index() { }
+	
+	def geolocation() { }
 
 	def gettemp() {
 
@@ -41,10 +43,7 @@ class DashboardController {
 		try {
 			def client = new RESTClient("https://api.sandbox.amadeus.com/v1.2/")
 			//client.authorization = new HTTPBasicAuthorization(credUserName, credUserPassword)
-			String apiUrl = "/hotels/"+ params.property_code + "?apikey=" + grailsApplication.config.grails.appKey + "&check_in=" + params.check_in + "&check_out=" + params.check_out;
-			println "API URL : " + apiUrl
-			//def response = client.get(path: '/hotels/MXLASC07?apikey=Ae9sOKJ1iwj25Uo8ZlysnNMIw6o5Jkju&check_in=2017-01-14&check_out=2017-01-30')
-			def response = client.get(path: apiUrl)
+			def response = client.get(path: '/hotels/MXLASC07?apikey=Ae9sOKJ1iwj25Uo8ZlysnNMIw6o5Jkju&check_in=2017-01-14&check_out=2017-01-30')
 			println response
 			data = DashboardUtils.createFilterMapForRooms(response)
 		}
