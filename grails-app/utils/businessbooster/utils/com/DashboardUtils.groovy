@@ -6,8 +6,9 @@ import wslite.rest.Response;
 class DashboardUtils {
 
 	static Map createFilterMapForRooms(Response response){
-		def filterMap = [:]
+		
 		def data = [:]
+		def dataList = []
 		if (response.statusCode != 200) {
 			data = [ status: "fail", statusCode: 400, errorMsg: response.message ]
 		}
@@ -21,10 +22,27 @@ class DashboardUtils {
 				roomInfoMap["room_type"] = it.room_type_info.room_type
 				roomInfoMap["bed_type"] = it.room_type_info.bed_type
 				roomInfoMap["number_of_beds"] = it.room_type_info.number_of_beds
+				
+				
+				def filterMap = [:]
+				filterMap["roomInfo"] = roomInfoMap
+				def dateRateList = []
+				
+				dateRateMap?.each {date1, rate1->
+					def dateRateTempMap1 = [:]
+					dateRateTempMap1["date"] = date1
+					dateRateTempMap1["rate"] = rate1
+					dateRateList.add(dateRateTempMap1)
+					
+				}
+				
+				filterMap["rates"] = dateRateList;
+				dataList.add(filterMap)
+				
+				
 			}
-			filterMap["roomInfo"] = roomInfoMap
-			filterMap["rates"] = dateRateMap;
-			data = [ status: "success", statusCode: 200, data: filterMap ]
+			
+			data = [ status: "success", statusCode: 200, data: dataList ]
 		}
 		return data;
 	}

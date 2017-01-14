@@ -51,6 +51,7 @@ class DashboardController {
 		catch(Exception e) {
 			e.printStackTrace()
 			data = [ status: "fail", statusCode: 400, errorMsg: e.getMessage() ]
+			
 		}
 		render data as JSON
 	}
