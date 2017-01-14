@@ -16,8 +16,12 @@ class DashboardUtils {
 			//int counter = 0
 			TreeMap dateRateMap = [:]
 			def dateRoomRateMap = [:]
-			def keysList = [] 
+			def keysList = []
 			def roomInfoMap = [:]
+			def roomInfoList=[]
+			def finalDateRoomRateMap = [:]
+			def finalDateRoomRateList = []
+			
 			response?.json?.rooms?.each{
 				//counter ++;
 				//dateRateMap = [:]
@@ -25,10 +29,8 @@ class DashboardUtils {
 				it?.rates?.each{
 					dateRateMap[it?.start_date] = it?.price
 				}
-				roomInfoMap["room_type_code"] = it.room_type_code
-				roomInfoMap["room_type"] = it.room_type_info.room_type
-				roomInfoMap["bed_type"] = it.room_type_info.bed_type
-				roomInfoMap["number_of_beds"] = it.room_type_info.number_of_beds
+				roomInfoMap[it.room_type_code] = it.room_type_info.room_type +" " + it.room_type_info.bed_type +" " + it.room_type_info.number_of_beds
+				roomInfoList.add(roomInfoMap)
 				keysList.add(it.room_type_code)
 
 
@@ -41,19 +43,16 @@ class DashboardUtils {
 					else
 						dateRoomRateMap[date1] = [(it.room_type_code) : rate1]
 				}
-				/*
-				 def dateRateTempMap1 = [:]
-				 dateRateTempMap1["date"] = date1
-				 dateRateTempMap1["rate"] = rate1
-				 dateRateList.add(dateRateTempMap1)
-				 }
-				 filterMap["rates"] = dateRateList;
-				 dataList.add(filterMap)*/	
-
-
+				
+				
 			}
-
-			data = [ status: "success", statusCode: 200, keys:keysList, data:dateRoomRateMap ]
+			dateRoomRateMap?.each {date1, roomRateMap->
+				finalDateRoomRateMap = [:]
+				finalDateRoomRateMap = roomRateMap
+				finalDateRoomRateMap["date"] = date1
+				finalDateRoomRateList.add(finalDateRoomRateMap)
+			}
+			data = [ status: "success", statusCode: 200, keys:keysList, data:finalDateRoomRateList, roomDescList : roomInfoList ]
 		}
 		return data;
 	}
@@ -77,7 +76,7 @@ class DashboardUtils {
 				hotelList << tempMap
 				totalHotels++
 				if(maxRate < tempMap["totalRate"])
-					maxRate = tempMap["totalRate"]
+				maxRate = tempMap["totalRate"]
 			}
 			filterMap["totalHotels"] = totalHotels
 			filterMap["hotelList"] = hotelList
