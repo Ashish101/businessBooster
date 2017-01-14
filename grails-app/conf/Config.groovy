@@ -12,7 +12,6 @@
 // }
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
-
 // The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
 grails.mime.disable.accept.header.userAgents = ['Gecko', 'WebKit', 'Presto', 'Trident']
 grails.mime.types = [ // the first one is the default format
@@ -88,7 +87,7 @@ grails.hibernate.osiv.readonly = false
 environments {
     development {
         grails.logging.jul.usebridge = true
-		
+		grails.appKey ='Ae9sOKJ1iwj25Uo8ZlysnNMIw6o5Jkju'
 //		grails.serverURL = "http://10.135.192.169"
     }
     production {
