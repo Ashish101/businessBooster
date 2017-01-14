@@ -25,7 +25,7 @@ init();
 function init() {
 
   var svg = d3.select("svg"),
-      margin = {top: 20, right: 20, bottom: 30, left: 40},
+      margin = {top: 20, right: 20, bottom: 100, left: 40},
       width = +svg.attr("width") - margin.left - margin.right,
       height = +svg.attr("height") - margin.top - margin.bottom;
 
@@ -35,43 +35,46 @@ function init() {
   var g = svg.append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  console.log("${request.getContextPath()}/js/response.json");
-  d3.json("${request.getContextPath()}/js/response.json", function(json) {
-    console.log(json);
-  });
+    $.get("http://localhost:8080/businessbooster/dashboard/gethoteldata", function(response, status) {
+    var hotelList = response['data']['hotelList'];
 
-  d3.tsv("${request.getContextPath()}/js/data.tsv", function(d) {
-    d.frequency = +d.frequency;
-    return d;
-  }, function(error, data) {
-    if (error) throw error;
-
-    x.domain(data.map(function(d) { return d.letter; }));
-    y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
-
-    g.append("g")
+      hotelList.forEach(function(d) {
+        d.name = d.name;
+        console.log(d.name);
+        d.totalRate = d.totalRate;
+      });
+      
+      x.domain(hotelList.map(function(d) { return d.name; }));
+        
+        g.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x))
+        .selectAll("text")  
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-90)" );
 
-    g.append("g")
+      y.domain([0, d3.max(hotelList, function(d) { return d.totalRate; })]);
+
+      g.append("g")
         .attr("class", "axis axis--y")
-        .call(d3.axisLeft(y).ticks(10, "%"))
-      .append("text")
+        .call(d3.axisLeft(y))
+        .append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
         .attr("dy", "0.71em")
-        .attr("text-anchor", "end")
-        .text("Frequency");
+        .attr("text-anchor", "end");
 
-    g.selectAll(".bar")
-      .data(data)
+      g.selectAll(".bar")
+      .data(hotelList)
       .enter().append("rect")
         .attr("class", "bar")
-        .attr("x", function(d) { return x(d.letter); })
-        .attr("y", function(d) { return y(d.frequency); })
+        .attr("x", function(d) { return x(d.name); })
+        .attr("y", function(d) { return y(d.totalRate); })
         .attr("width", x.bandwidth())
-        .attr("height", function(d) { return height - y(d.frequency); });
+        .attr("height", function(d) { return height - y(d.totalRate); });
   });
 }
 
@@ -80,4 +83,3 @@ function myJsonMethod(response) {
 }
 
 </script>
-
