@@ -11,6 +11,8 @@ class DashboardController {
 
 	def index() { }
 	
+	def index1() { }
+
 	def geolocation() { }
 
 	def gettemp() {

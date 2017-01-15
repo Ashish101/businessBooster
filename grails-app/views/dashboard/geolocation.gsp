@@ -50,6 +50,8 @@
         margin-bottom: 2px;
       }
     </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   </head>
 
   <body>
@@ -68,6 +70,8 @@
       // This example requires the Places library. Include the libraries=places
       // parameter when you first load the API. For example:
       // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+      var MAP_API_KEY = "AIzaSyASzllYde2cO8z7gmUg5Wkez4asfgYc9hE";
 
       var latitude, longitude;
       var placeSearch, autocomplete;
@@ -97,6 +101,7 @@
       // as supplied by the browser's 'navigator.geolocation' object.
       function geolocate() {
         if (navigator.geolocation) {
+          console.log(navigator.geolocation);
           navigator.geolocation.getCurrentPosition(function(position) {
 
               latitude = position.coords.latitude;
@@ -120,6 +125,16 @@
 
       function getLocationDetails()
       { 
+
+        var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+ document.getElementById('autocomplete').value+"&key=" + MAP_API_KEY;
+        console.log(url);
+
+        $.get(url, function(response, status) {
+          console.log(response);
+        });
+
+        //https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY
+
     	  console.log("latitude = ", latitude);
     	  console.log("longitude = ", longitude);
     	  
