@@ -166,4 +166,24 @@ class DashboardUtils {
 				data = [ status: "success", statusCode: 200, data: filterList ]
 			}
 		}
+		
+		static Map getNearestAirports(Response response){
+			def data = [:]
+			def filterMap = [:]
+			if (response.statusCode != 200) {
+				data = [ status: "fail", statusCode: 400, errorMsg: response.message ]
+			}
+			else {
+				def filterList = []
+				response?.json?.each{
+					filterMap=[:]
+					filterMap["airportName"] = it.airport_name
+					filterMap["latitude"] = it.location.latitude
+					filterMap["longitude"] = it.location.longitude
+					filterMap["aircraftMovements"] = it.aircraft_movements
+					filterList.add(filterMap)
+				}
+				data = [ status: "success", statusCode: 200, data: filterList ]
+			}
+		}
 }
