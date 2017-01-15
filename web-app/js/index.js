@@ -6,7 +6,9 @@ var startDate;
 var endDate;
 var longitude;
 var latitude;
+var map;
 
+//$( document ).ready(function() {
 $(window).load (function() {
 	init();
 });
@@ -228,6 +230,8 @@ function onSearch() {
 	if(startDate !== undefined && endDate !== undefined && radius !== undefined) {
 		$('#placeholder3xx3').empty();
 		drawBarChart(radius);
+    initMap();
+    getMarkers(radius);
 	}  
 	console.log(startDate + " " + endDate);
 }
@@ -286,3 +290,49 @@ $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
 	startDate = picker.startDate.format('YYYY-MM-DD');
 	endDate = picker.endDate.format('YYYY-MM-DD');
  });
+
+function getMarkers(radius)
+    { console.log("Inside markers...");
+      var markers = [];//some array
+    $.ajax({url: "http://localhost:8080/businessbooster/dashboard/interestpoints?&latitude=36.0857&longitude=-115.1541&radius=42", success: function(results){
+          //window.eqfeed_callback = function(results) {
+                 for (var i = 0; i < results.data.length; i++) {
+                   var coords = results.data[i];
+                   var latLng = new google.maps.LatLng(coords.latitude,coords.longitude);
+                   var marker = new google.maps.Marker({
+                      position: latLng,
+                      map: map
+                   });
+                   markers.push(marker);
+                 }
+               //}
+
+                 var bounds = new google.maps.LatLngBounds();
+               for (var i = 0; i < markers.length; i++) {
+                bounds.extend(markers[i].getPosition());
+               }
+
+               map.fitBounds(bounds);
+         }});
+       
+       
+    }
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 5,
+        center: new google.maps.LatLng(36,-115),
+        mapTypeId: 'terrain'
+      });
+
+      
+      // Create a <script> tag and set the USGS URL as the source.
+      var script = document.createElement('script');
+      // This example uses a local copy of the GeoJSON stored at
+      // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
+      //script.src = 'https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js';
+      //$("button2").click(function(){
+         
+      //});
+      document.getElementsByTagName('head')[0].appendChild(script);
+    }

@@ -25,6 +25,7 @@
 
   <body class="nav-md">
     <div class="container body">
+      <h2 class="text-center" style="font-size:100px">D-VIZ</h2>
       <div class="main_container">
 
         <!-- page content -->
@@ -92,6 +93,11 @@
             </div>
           </div>
         </div>
+
+        <div style="height:500px; width:500px;">
+          <div id="map"></div>
+        </div>
+        
         <!-- /page content -->
 
         <!-- footer content -->
@@ -174,7 +180,7 @@
           console.log("hide event fired");
         });
         $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
-          console.log("apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));
+          $(this).attr('value', $('#reportrange').val());
         });
         $('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
           console.log("cancel event fired");
@@ -188,7 +194,10 @@
         $('#destroy').click(function() {
           $('#reportrange').data('daterangepicker').remove();
         });
-      });
+        $('#reportrange').change(function(){
+          $(this).attr('value', $('#deliveryTime').val());
+        });
+    });
 
     </script>
     <!-- /bootstrap-daterangepicker -->
