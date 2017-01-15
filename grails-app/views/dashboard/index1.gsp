@@ -35,21 +35,33 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="dashboard_graph x_panel">
                   <div class="row x_title">
-                    <div class="col-md-4">
-                      <h3>Hotel Data </h3>
-                    </div>
-                    <div class="col-md-4">
-                      <label class="pull-left">Radius :</label>
-                      <input class="pull-right" type="range" id="myRange" value="50" style="width: 75%;">
+                   
+                   <div class="col-xs-3">
+                      <input id="myRange" type ="range" min ="100" max="500" step ="50" width="50px" value ="100" style="margin: 0 auto"/>
                     </div>
 
-                    <div class="col-md-4">
-                      <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                    <div class="col-xs-3">
+                      <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc" style="display:block;margin-left:auto;margin-right:auto;">
                         <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                         <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
                       </div>
                     </div>
+
+                    <div id="locationField" class="col-xs-3">
+                      <div class="input-group">
+                         <input id="autocomplete" placeholder="Enter your address"
+                      onFocus="geolocate()" type="text"></input>
+                    <button id="search" onClick="getLocationDetails()">Search</button>
+                      </div>
+                    </div>
+
+                    <div class = "col-xs-3">
+                      <img src="<%= request.getContextPath() %>/images/search-icon.png" height="50px" widht="50px" onclick="onSearch()" style="display:block;margin-left:auto;margin-right:auto;">
+                    </div>
+
                   </div>
+
+                  
                   <div class="x_content">
                     <div class="demo-container" style="height:500px">
                       <div id="placeholder3xx3" class="demo-placeholder" style="width: 100%; height:500px;"></div>
@@ -131,6 +143,8 @@
     <!-- Custom Theme Scripts -->
     <script src="<%= request.getContextPath() %>/js/custom.min.js"></script>
     <script src="<%= request.getContextPath() %>/js/index.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASzllYde2cO8z7gmUg5Wkez4asfgYc9hE&libraries=places&callback=initAutocomplete"
+        async defer></script>
 
     <script type="text/javascript">
       $(document).ready(function() {
@@ -202,6 +216,7 @@
           $('#reportrange').data('daterangepicker').remove();
         });
       });
+
     </script>
     <!-- /bootstrap-daterangepicker -->
   </body>
