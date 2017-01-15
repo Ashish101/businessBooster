@@ -154,4 +154,20 @@ class DashboardController {
 		}
 		render data as JSON
 	}
+	
+	def getpriceestimate(){
+		def data = [:]
+		try {
+			def client = new RESTClient("https://api.uber.com/v1.2")
+			println params
+			String apiUrl = "/estimates/price?server_token=T3870pfIeJSLInQoQ_tvvtplfWL_mNaOerBfp-FF&start_latitude="+params?.start_latitude+"&start_longitude="+params?.start_longitude+"&end_latitude="+params?.end_latitude+"&end_longitude="+params?.end_longitude;
+			def response = client.get(path: apiUrl)
+			data = DashboardUtils.getMinimumFare(response)
+		}
+		catch(Exception e) {
+			e.printStackTrace()
+			data = [ status: "fail", statusCode: 400, errorMsg: e.getMessage() ]
+		}
+		render data as JSON
+	}
 }

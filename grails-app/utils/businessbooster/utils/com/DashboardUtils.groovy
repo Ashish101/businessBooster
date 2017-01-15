@@ -194,4 +194,27 @@ class DashboardUtils {
 				data = [ status: "success", statusCode: 200, data: filterList ]
 			}
 		}
+		
+		static Map getMinimumFare(Response response){
+			def data = [:]
+			def filterMap = [:]
+			def low_estimate = 0.0
+			def distance = 0.0
+			if (response.statusCode != 200) {
+				data = [ status: "fail", statusCode: 400, errorMsg: response.message ]
+			}
+			else {
+				
+				println response?.json?.prices?.size()
+				response?.json?.prices?.each{
+					filterMap = [:]
+					if (it?.localized_display_name == "uberX")
+					{
+						low_estimate = it?.low_estimate
+						distance = it?.distance
+					}
+				}
+				data = [ status: "success", statusCode: 200, distance: distance, low_estimate: low_estimate ]
+			}
+		}
 }
