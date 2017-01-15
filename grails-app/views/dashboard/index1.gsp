@@ -38,12 +38,14 @@
                 <div class="dashboard_graph x_panel">
                   <div class="row x_title">
                    
-                   <div class="col-xs-4">
+                   		  <div class="col-xs-1">
                               <label for="MyInput" style="text-align:center; width:1px;">Area</label>
+                          </div>
+                          <div class="col-xs-3">
                               <input id="myRange" type ="range" min ="100" max="500" step ="50" width="80%" value ="100">
                            </div>
 
-                            <div class="col-xs-4">
+                            <div class="col-xs-3">
                               <div id="reportrange" style="background: #fff; cursor: pointer; padding: 7px 5px; border: 1px solid #ccc" style="display:block;margin-left:auto;margin-right:auto;">
                                  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                  <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
@@ -52,11 +54,12 @@
 
                          
                      <div id="locationField" class="col-xs-3">
-                      <div class="input-group">
-                         <input id="autocomplete" placeholder="Enter your address"
-                      onFocus="geolocate()" type="text"></input>
-                    <button id="search" onClick="onSearch()">Search</button>
-                      </div>
+                      <!-- <div class="input-group"> -->
+                         <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text" class="form-control"></input>
+                    </div>	
+                    <div class="col-xs-2">
+                    	 <button id="search" onClick="onSearch()" class="btn btn-default">Search</button>
+                     
                     </div>
                     <!-- <div class = "col-xs-3">
                       <img src="<%= request.getContextPath() %>/images/search-icon.png" height="50px" widht="50px" onclick="onSearch()" style="display:block;margin-left:auto;margin-right:auto;">
@@ -83,9 +86,24 @@
                         <div id="streamgraph" class="demo-placeholder" style="width: 100%; height:500px;"></div>
                       </div>
                       <div class = "col-xs-4" style="height:500px;">
-                        <h4 id="hotelName"></h4>
-                        <h4 id="address"></h4>
-                        <p><h1 id="rating"></h1></p>
+                      <table class="table" style="visibility:hidden" id="tableHotelInfo">
+                      	<tr class="info">
+                      		<th><center><b>Hotel Information</b></center></th>
+                      		<th></th>
+                        </tr>
+                      	<tr class="info">
+                      		<td>Name</td>
+                      		<td id="hotelName"></td>
+                      	</tr>
+                      	<tr class="info">
+                      		<td>Address</td>
+                        	<td id="address"></td>
+                        </tr>
+                        <tr class="info">
+                        	<td>Rating</td>
+                        	<td id="rating"></td>
+                        </tr>
+                      </table>
                       </div>
                     </div>
                   </div>
@@ -95,9 +113,7 @@
           </div>
         </div>
 
-        <div style="height:500px; width:500px;">
-          <div id="map"></div>
-        </div>
+      
         
         <!-- /page content -->
 

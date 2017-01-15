@@ -210,8 +210,10 @@ $.get(url, function(response, status) {
 function showHotelDetails(propertyCode) {
 	var url = "http://localhost:8080/businessbooster/dashboard/getstatichoteldata?property_code=" + propertyCode + "&check_in=" + startDate + "&check_out=" + endDate; 
 	$.get(url, function(response, status) {
-		document.getElementById("hotelName").innerHTML = "NAME:" + response['data']['property_name'];
-		document.getElementById("address").innerHTML = "ADDRESS:" + response['data']['address']['line1'] + ", " +
+//		 $('#tableHotelInfo').show();
+		 $("#tableHotelInfo").css("visibility", "visible");
+		document.getElementById("hotelName").innerHTML = response['data']['property_name'];
+		document.getElementById("address").innerHTML =  response['data']['address']['line1'] + ", " +
 														response['data']['address']['city'] + ", " +
 														response['data']['address']['country'] + ", " +
 														response['data']['address']['postal_code'];
@@ -233,12 +235,12 @@ console.log(url);
           longitude = location.lng;
           console.log(latitude + ' ' + longitude);
           radius = document.getElementById("myRange").value;
-  console.log(document.getElementById("myRange").value);
-  if(startDate !== undefined && endDate !== undefined && radius !== undefined) {
-    //$('#placeholder3xx3').empty();
-    drawBarChart(radius);
-  }  
-  console.log(startDate + " " + endDate);
+		  console.log(document.getElementById("myRange").value);
+		  if(startDate !== undefined && endDate !== undefined && radius !== undefined) {
+		    $('#placeholder3xx3').empty();
+		    drawBarChart(radius);
+		  }  
+		  console.log(startDate + " " + endDate);
         });
 	
 }
