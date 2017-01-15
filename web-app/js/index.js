@@ -104,6 +104,90 @@ function drawBarChart(radius) {
   }); 
 }
 
+function drawBarChart(radius) {
+  var width = document.getElementById('placeholder3xx3').offsetWidth,
+    height = document.getElementById('placeholder3xx3').offsetHeight,
+  svg = d3.select("#placeholder3xx3")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", "teal"),
+      margin = {top: 20, right: 20, bottom: 100, left: 40},
+      width = +svg.attr("width") - margin.left - margin.right,
+      height = +svg.attr("height") - margin.top - margin.bottom;
+
+      svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ 0 +","+(height/2 + 200)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+            .text("Average Price");
+
+        svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ (width/2) +","+ height +")")  // centre below axis
+            .text("Hotel Names");
+
+  var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+      y = d3.scaleLinear().rangeRound([height, 0]);
+
+  var g = svg.append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var url = "http://localhost:8080/businessbooster/dashboard/gethoteldata?&latitude=" + latitude + "&longitude="
+       + longitude + "&radius=" + radius + "&check_in=" + startDate + "&check_out=" + endDate;
+
+       console.log(url);
+
+    $.get(url, function(response, status) {
+      console.log(response);
+    var hotelList = response['data']['hotelList'];
+
+      hotelList.forEach(function(d) {
+        d.name = d.name;
+        d.totalRate = d.totalRate;
+      });
+
+      x.domain(hotelList.map(function(d) { return d.name; }));
+        
+        g.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")  
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-90)" );
+
+      y.domain([0, d3.max(hotelList, function(d) { return d.totalRate; })]);
+
+      g.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y))
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", "0.71em")
+        .attr("text-anchor", "end");
+
+      g.selectAll(".bar")
+      .data(hotelList)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(d.name); })
+        .attr("y", function(d) { return y(d.totalRate); })
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return height - y(d.totalRate); })
+        .on("click", function(d) {
+          $('#streamgraph').empty();
+          drawHotelRates(d['propertyCode']);
+          showHotelDetails(d['propertyCode']);
+          
+          $('body,html').animate({ scrollTop: 500 }, 120);
+          
+        });
+  }); 
+}
+
 function drawHotelRates(propertyCode) {
 	console.log(propertyCode);
   /*$.get("http://localhost:8080/businessbooster/dashboard/gethoteldata?&latitude=36.0857&longitude=-115.1541&radius=42&check_in=2017-01-16&check_out=2017-01-17", function(response, status) {
@@ -358,7 +442,93 @@ function getMarkers(radius)
     
     function airportInformationApiCall()
     {
-    	
+      $('#streamgraph').empty();
+    	var width = document.getElementById('streamgraph').offsetWidth,
+    height = document.getElementById('streamgraph').offsetHeight,
+  svg = d3.select("#streamgraph")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", "teal"),
+      margin = {top: 20, right: 20, bottom: 100, left: 60},
+      width = +svg.attr("width") - margin.left - margin.right,
+      height = +svg.attr("height") - margin.top - margin.bottom;
+
+      /*svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ 0 +","+(height/2 + 200)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+            .text("Average Price");
+
+        svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ (width/2) +","+ height +")")  // centre below axis
+            .text("Hotel Names");
+*/
+  var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+      y = d3.scaleLinear().rangeRound([height, 0]);
+
+  var g = svg.append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var url = "http://localhost:8080/businessbooster/dashboard/nearestairports?&latitude=" + latitude + "&longitude=" + longitude;
+
+       console.log(url);
+
+    $.get(url, function(response, status) {
+      console.log(response);
+    var airportList = response['data'];
+
+      airportList.forEach(function(d) {
+        d.airportName = d.airportName;
+        d.aircraftMovements = d.aircraftMovements;
+      });
+
+      x.domain(airportList.map(function(d) {
+      console.log(d.airtportName); 
+        return d.airportName; 
+      }));
+        
+        g.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")  
+            .style("text-anchor", "end")
+            .attr("dy", "+0.75em");
+
+      y.domain([0, d3.max(airportList, function(d) { 
+        return d.aircraftMovements;
+         })]);
+
+      g.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y))
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dx", "0.71em")
+        .attr("dy", "0.71em")
+        .attr("text-anchor", "end");
+
+      g.selectAll(".bar")
+      .data(airportList)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { 
+          return x(d.airportName); })
+        .attr("y", function(d) {
+         return y(d.aircraftMovements); })
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return height - y(d.aircraftMovements); })
+        .on("click", function(d) {
+          /*$('#streamgraph').empty();
+          drawHotelRates(d['propertyCode']);
+          showHotelDetails(d['propertyCode']);
+          
+          $('body,html').animate({ scrollTop: 500 }, 120);*/
+          
+        });
+      });
     }
     
     function priceEstimateApiCall()
