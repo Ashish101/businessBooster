@@ -225,15 +225,22 @@ function showHotelDetails(propertyCode) {
 }
 
 function onSearch() {
-	radius = document.getElementById("myRange").value;
-	console.log(document.getElementById("myRange").value);
-	if(startDate !== undefined && endDate !== undefined && radius !== undefined) {
-		$('#placeholder3xx3').empty();
-		drawBarChart(radius);
-    initMap();
-    getMarkers(radius);
-	}  
-	console.log(startDate + " " + endDate);
+  var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+ document.getElementById('autocomplete').value+"&key=" + MAP_API_KEY;
+console.log(url);
+        $.get(url, function(response, status) {
+          var location = response['results'][0]['geometry']['location'];
+          latitude = location.lat;
+          longitude = location.lng;
+          console.log(latitude + ' ' + longitude);
+          radius = document.getElementById("myRange").value;
+  console.log(document.getElementById("myRange").value);
+  if(startDate !== undefined && endDate !== undefined && radius !== undefined) {
+    //$('#placeholder3xx3').empty();
+    drawBarChart(radius);
+  }  
+  console.log(startDate + " " + endDate);
+        });
+	
 }
 
 function initAutocomplete() {
