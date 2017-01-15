@@ -71,9 +71,25 @@
               </div>
             </div>
 
-
+            <div class="panel panel-default">
+              <div class="panel-heading">Hotel Information</div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                      <div class = "col-xs-8" style="height:500px;">
+                        <div id="streamgraph" class="demo-placeholder" style="width: 100%; height:500px;"></div>
+                      </div>
+                      <div class = "col-xs-4" style="height:500px;">
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
+
                 <div class="x_panel dashboard_graph">
                   <div class="x_title">
                     <h2>Incomes <small>Sessions</small></h2>

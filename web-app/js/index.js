@@ -29,8 +29,15 @@ function drawBarChart(radius) {
       width = +svg.attr("width") - margin.left - margin.right,
       height = +svg.attr("height") - margin.top - margin.bottom;
 
-      console.log(+svg.attr("width"));
-      console.log(height);
+      svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ 0 +","+(height/2 + 200)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+            .text("Average Price");
+
+        svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ (width/2) +","+ height +")")  // centre below axis
+            .text("Hotel Names");
 
   var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
       y = d3.scaleLinear().rangeRound([height, 0]);
@@ -82,19 +89,31 @@ function drawBarChart(radius) {
         .attr("x", function(d) { return x(d.name); })
         .attr("y", function(d) { return y(d.totalRate); })
         .attr("width", x.bandwidth())
-        .attr("height", function(d) { return height - y(d.totalRate); });
+        .attr("height", function(d) { return height - y(d.totalRate); })
+        .on("click", function(d) {
+        	$('#streamgraph').empty();
+        	drawHotelRates(d['propertyCode']);
+        });
   }); 
 }
 
-function drawHotelRates(startDate, endDate, radius) {
+function drawHotelRates(propertyCode) {
+	console.log(propertyCode);
   /*$.get("http://localhost:8080/businessbooster/dashboard/gethoteldata?&latitude=36.0857&longitude=-115.1541&radius=42&check_in=2017-01-16&check_out=2017-01-17", function(response, status) {
     console.log(response);
 });*/
-    var svg = d3.select("svg"),
-    margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = svg.attr("width") - margin.left - margin.right,
-    height = svg.attr("height") - margin.top - margin.bottom;
-
+var	width = document.getElementById('streamgraph').offsetWidth,
+		height = document.getElementById('streamgraph').offsetHeight,
+	svg = d3.select("#streamgraph")
+		.append("svg")
+		.attr("width", width)
+		.attr("height", height),	
+		 margin = {top: 20, right: 20, bottom: 40, left: 50},
+		width = +svg.attr("width") - margin.left - margin.right,
+      height = +svg.attr("height") - margin.top - margin.bottom;
+    //var svg = d3.select("svg"),
+    ;
+    
 var parseDate = d3.timeParse("%Y-%m-%d");
 
 var x = d3.scaleTime().range([0, width]),
@@ -118,8 +137,8 @@ var area = d3.area()
 
 var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-$.get("http://localhost:8080/businessbooster/dashboard/getroomdata?property_code=RTCEQIBS&check_in=2017-01-14&check_out=2017-01-30", function(response, status) {
+var url = "http://localhost:8080/businessbooster/dashboard/getroomdata?property_code=" + propertyCode + "&check_in=" + startDate + "&check_out=" + endDate; 
+$.get(url, function(response, status) {
   console.log(response);
   var keys = response['keys'];
   var data = response['data'];
@@ -167,7 +186,9 @@ $.get("http://localhost:8080/businessbooster/dashboard/getroomdata?property_code
   })
     .append("text")
       .attr("x", width - 6)
-      .attr("y", function(d) { return y(d[d.length - 1][1]); })
+      .attr("y", function(d) { 
+      	return y(d[d.length - 1][1]); 
+      })
       .style("font", "10px sans-serif")
       .style("text-anchor", "end")
       .text(function(d) { return d.key; });
@@ -187,6 +208,7 @@ function onSearch() {
 	radius = document.getElementById("myRange").value;
 	console.log(document.getElementById("myRange").value);
 	if(startDate !== undefined && endDate !== undefined && radius !== undefined) {
+		$('#placeholder3xx3').empty();
 		drawBarChart(radius);
 	}  
 	console.log(startDate + " " + endDate);
