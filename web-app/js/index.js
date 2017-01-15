@@ -93,6 +93,7 @@ function drawBarChart(radius) {
         .on("click", function(d) {
         	$('#streamgraph').empty();
         	drawHotelRates(d['propertyCode']);
+        	showHotelDetails(d['propertyCode']);
         });
   }); 
 }
@@ -204,6 +205,23 @@ $.get(url, function(response, status) {
 });
 }
 
+function showHotelDetails(propertyCode) {
+	var url = "http://localhost:8080/businessbooster/dashboard/getstatichoteldata?property_code=" + propertyCode + "&check_in=" + startDate + "&check_out=" + endDate; 
+	$.get(url, function(response, status) {
+		document.getElementById("hotelName").innerHTML = "NAME:" + response['data']['property_name'];
+		document.getElementById("address").innerHTML = "ADDRESS:" + response['data']['address']['line1'] + ", " +
+														response['data']['address']['city'] + ", " +
+														response['data']['address']['country'] + ", " +
+														response['data']['address']['postal_code'];
+		if(response["data"]["rating"] == undefined) {
+			document.getElementById("rating").innerHTML = "NA";	
+		} else {
+			document.getElementById("rating").innerHTML = response["data"]["rating"] + "/5";	
+		}
+	});
+	
+}
+
 function onSearch() {
 	radius = document.getElementById("myRange").value;
 	console.log(document.getElementById("myRange").value);
@@ -231,7 +249,6 @@ function getLocationDetails()
       { 
 
         var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+ document.getElementById('autocomplete').value+"&key=" + MAP_API_KEY;
-        console.log(url);
 
         $.get(url, function(response, status) {
           var location = response['results'][0]['geometry']['location'];
@@ -268,5 +285,4 @@ function getLocationDetails()
 $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
 	startDate = picker.startDate.format('YYYY-MM-DD');
 	endDate = picker.endDate.format('YYYY-MM-DD');
-   	console.log("apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));
  });
