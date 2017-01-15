@@ -134,6 +134,22 @@ class DashboardController {
 			data = [ status: "fail", statusCode: 400, errorMsg: e.getMessage() ]
 		}
 		render data as JSON
-
+	}
+	
+	def nearestairports(){
+		def data = [:]
+		try {
+			def client = new RESTClient("https://api.sandbox.amadeus.com/v1.2")
+			//client.authorization = new HTTPBasicAuthorization(credUserName, credUserPassword)
+			String apiUrl = "airports/nearest-relevant?apikey=" + grailsApplication.config.grails.appKey + "&latitude=" + params.latitude  + "&longitude=" + params.longitude;
+			println "--------------------------------------"+apiUrl
+			def response = client.get(path: apiUrl)
+			data = DashboardUtils.getNearestAirports(response)
+		}
+		catch(Exception e) {
+			e.printStackTrace()
+			data = [ status: "fail", statusCode: 400, errorMsg: e.getMessage() ]
+		}
+		render data as JSON
 	}
 }
