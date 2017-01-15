@@ -5,7 +5,7 @@ import wslite.rest.Response;
 
 class DashboardUtils {
 
-	static Map createFilterMapForRooms(Response response){
+	static Map createFilterMapForRooms(Response response, def params){
 
 		def data = [:]
 		def dataList = []
@@ -53,6 +53,7 @@ class DashboardUtils {
 			int setSize = room_type_codeSet.size()
 			println "Set Contents = "+room_type_codeSet+" Set Size= "+room_type_codeSet.size()
 			def tempRoomRateMap = [:]
+			def endDateMap = [:]
 			dateRoomRateMap?.each {date1, roomRateMap->
 				finalDateRoomRateMap = [:]
 				
@@ -73,9 +74,16 @@ class DashboardUtils {
 						}
 					}
 				}
+				roomRateMap.each {k,v -> 
+					endDateMap["$k"] = v
+				}
 				finalDateRoomRateMap["date"] = date1
 				finalDateRoomRateList.add(finalDateRoomRateMap)
 			}
+			
+			endDateMap["date"] = params.check_out
+			println "EndDateMap : " + endDateMap
+			finalDateRoomRateList.add(endDateMap)
 			data = [ status: "success", statusCode: 200, keys:keysList, data:finalDateRoomRateList, roomDescList : roomInfoList, maxRate : maxRate ]
 		}
 		return data;

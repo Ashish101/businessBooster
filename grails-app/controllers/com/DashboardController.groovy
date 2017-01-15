@@ -50,7 +50,7 @@ class DashboardController {
 			//def response = client.get(path: '/hotels/MXLASC07?apikey=Ae9sOKJ1iwj25Uo8ZlysnNMIw6o5Jkju&check_in=2017-01-14&check_out=2017-01-30')
 			def response = client.get(path: apiUrl)	
 			println response
-			data = DashboardUtils.createFilterMapForRooms(response)
+			data = DashboardUtils.createFilterMapForRooms(response, params)
 		}
 		catch(Exception e) {
 			e.printStackTrace()
