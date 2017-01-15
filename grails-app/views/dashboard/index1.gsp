@@ -86,26 +86,34 @@
                         <div id="streamgraph" class="demo-placeholder" style="width: 100%; height:500px;"></div>
                       </div>
                       <div class = "col-xs-4" style="height:500px;">
-                      <table class="table" style="visibility:hidden" id="tableHotelInfo">
-                      	<tr class="info">
-                      		<th><center><b>Hotel Information</b></center></th>
-                      		<th></th>
-                        </tr>
-                      	<tr class="info">
-                      		<td>Name</td>
-                      		<td id="hotelName"></td>
-                      	</tr>
-                      	<tr class="info">
-                      		<td>Address</td>
-                        	<td id="address"></td>
-                        </tr>
-                        <tr class="info">
-                        	<td>Rating</td>
-                        	<td id="rating"></td>
-                        </tr>
-                      </table>
-                      <button type="button" class="btn btn-primary" id="locationInfo"  onClick="newMapWindow()">Search Location Information for business</button>
-
+	                      <div id="tableHotelInfo" style="visibility:hidden">
+		                      <table class="table">
+		                      	<tr class="info">
+		                      		<th><center><b>Hotel Information</b></center></th>
+		                      		<th></th>
+		                        </tr>
+		                      	<tr class="info">
+		                      		<td>Name</td>
+		                      		<td id="hotelName"></td>
+		                      	</tr>
+		                      	<tr class="info">
+		                      		<td>Address</td>
+		                        	<td id="address"></td>
+		                        </tr>
+		                        <tr class="info">
+		                        	<td>Rating</td>
+		                        	<td id="rating"></td>
+		                        </tr>
+		                      </table>
+	                      		
+		                      	<button type="button" class="btn btn-primary" id="locationInfo"  onClick="newMapWindow()" style="width:200px">Interesting places near me</button>
+								<br>
+								<button type="button" class="btn btn-primary" id="airportInfo"  onClick="airportInformationApiCall()" style="width:200px">Airports near me</button>
+								<br>
+								<button type="button" class="btn btn-primary" id="priceEstimate"  onClick="priceEstimateApiCall()" style="width:200px">Price estimation</button>
+							
+							
+							</div>
                       </div>
                     </div>
                   </div>

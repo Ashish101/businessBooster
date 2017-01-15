@@ -97,6 +97,9 @@ function drawBarChart(radius) {
         	$('#streamgraph').empty();
         	drawHotelRates(d['propertyCode']);
         	showHotelDetails(d['propertyCode']);
+        	
+        	$('body,html').animate({ scrollTop: 500 }, 120);
+        	
         });
   }); 
 }
@@ -305,7 +308,7 @@ $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
 function getMarkers(radius)
     { console.log("Inside markers...");
       var markers = [];//some array
-    $.ajax({url: "http://localhost:8080/businessbooster/dashboard/interestpoints?&latitude=36.0857&longitude=-115.1541&radius=42", success: function(results){
+      $.ajax({url: "http://localhost:8080/businessbooster/dashboard/interestpoints?&latitude=36.0857&longitude=-115.1541&radius=42", success: function(results){
           //window.eqfeed_callback = function(results) {
                  for (var i = 0; i < results.data.length; i++) {
                    var coords = results.data[i];
@@ -352,3 +355,15 @@ function getMarkers(radius)
     	 var win = window.open("http://localhost:8080/businessbooster/dashboard/geolocation?latitude="+latitude+"&longitude="+longitude+"&radius="+radius, '_blank');
     	  win.focus();
     }
+    
+    function airportInformationApiCall()
+    {
+    	
+    }
+    
+    function priceEstimateApiCall()
+    {
+    	
+    }
+    
+    
