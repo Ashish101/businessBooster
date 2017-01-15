@@ -6,10 +6,31 @@
     <meta charset="utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script>
+    
     function getMarkers()
     {	console.log("Inside markers...");
+
+    	var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+   		 };
+   		var latitude1 = getUrlParameter('latitude');
+   		var longitude1 = getUrlParameter('longitude');
+   		var radius1 = getUrlParameter('radius');
+
+    
     	var markers = [];//some array
-	 	$.ajax({url: "${createLink(controller:'Dashboard', action: 'interestpoints')}?&latitude=36.0857&longitude=-115.1541&radius=42", success: function(results){
+	 	$.ajax({url: "${createLink(controller:'Dashboard', action: 'interestpoints')}?&latitude="+latitude1+"&longitude="+longitude1+"&radius="+radius1, success: function(results){
          	//window.eqfeed_callback = function(results) {
                  for (var i = 0; i < results.data.length; i++) {
                    var coords = results.data[i];
@@ -29,8 +50,7 @@
 
             	 map.fitBounds(bounds);
          }});
-    	 
-    	 
+
     }
 
     var map;
@@ -51,11 +71,14 @@
          
       //});
       document.getElementsByTagName('head')[0].appendChild(script);
+
     }
 
     // Loop through the results array and place a marker for each
     // set of coordinates.
-    
+	  $( document ).ready(function() {
+		  getMarkers();
+	});
     </script>
     <style>
       /* Always set the map height explicitly to define the size of the div
@@ -112,9 +135,7 @@
 
   <body>
     <div id="locationField">
-      <input id="autocomplete" placeholder="Enter your address"
-             onFocus="geolocate()" type="text"></input><br>
-      <button id="search" onClick="getLocationDetails()">Search</button><br>
+     
       <button id="button2" onClick="getMarkers()">markers</button><br>
     </div>
     

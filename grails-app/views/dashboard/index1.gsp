@@ -104,11 +104,28 @@
                         	<td id="rating"></td>
                         </tr>
                       </table>
+                      <button type="button" class="btn btn-primary" id="locationInfo"  onClick="newMapWindow()">Search Location Information for business</button>
+
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div><!-- END: <div class="panel panel-default"> -->
+              
+              
+              <div class="row">
+              	<div class="col-md-12 col-sm-12 col-xs-12">
+              		 <div class="col-xs-6">
+	               		<div id="map" class="mapLoc">
+	               		
+	               		</div>
+	               	</div>
+	               	<div class="col-xs-6">
+	               	</div>
+               	</div>
+              </div> 	
+              
+              
             </div>
           </div>
         </div>

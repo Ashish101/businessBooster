@@ -17,6 +17,7 @@ function init() {
   //drawBarChart();
   //drawHotelRates("${request.getContextPath()}/js/response.json", "orange");
   //drawHotelRates();
+	
 }
 
 function drawBarChart(radius) {
@@ -227,6 +228,7 @@ function showHotelDetails(propertyCode) {
 }
 
 function onSearch() {
+	initMap();
   var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+ document.getElementById('autocomplete').value+"&key=" + MAP_API_KEY;
 console.log(url);
         $.get(url, function(response, status) {
@@ -336,12 +338,17 @@ function getMarkers(radius)
 
       
       // Create a <script> tag and set the USGS URL as the source.
-      var script = document.createElement('script');
+//      var script = document.createElement('script');
       // This example uses a local copy of the GeoJSON stored at
       // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
       //script.src = 'https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js';
       //$("button2").click(function(){
          
       //});
-      document.getElementsByTagName('head')[0].appendChild(script);
+//      document.getElementsByTagName('head')[0].appendChild(script);
+    }
+    
+    function newMapWindow(){
+    	 var win = window.open("http://localhost:8080/businessbooster/dashboard/geolocation?latitude="+latitude+"&longitude="+longitude+"&radius="+radius, '_blank');
+    	  win.focus();
     }
