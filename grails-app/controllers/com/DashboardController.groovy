@@ -147,6 +147,17 @@ class DashboardController {
 			println "--------------------------------------"+apiUrl
 			def response = client.get(path: apiUrl)
 			data = DashboardUtils.getNearestAirports(response)
+			params["start_latitude"]=params.latitude
+			params["start_longitude"]=params.longitude
+			
+			data?.data?.each{
+				params["end_latitude"] = it.latitude
+				params["end_longitude"] = it.longitude
+				def carData = getpriceestimate(params)
+				it?.distance = carData.distance
+				it?.low_estimate = carData.low_estimate 
+			}
+			
 		}
 		catch(Exception e) {
 			e.printStackTrace()
@@ -155,7 +166,7 @@ class DashboardController {
 		render data as JSON
 	}
 	
-	def getpriceestimate(){
+	def getpriceestimate(def params){
 		def data = [:]
 		try {
 			def client = new RESTClient("https://api.uber.com/v1.2")
@@ -168,6 +179,6 @@ class DashboardController {
 			e.printStackTrace()
 			data = [ status: "fail", statusCode: 400, errorMsg: e.getMessage() ]
 		}
-		render data as JSON
+		return data
 	}
 }

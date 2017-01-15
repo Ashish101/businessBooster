@@ -189,6 +189,7 @@ class DashboardUtils {
 					filterMap["latitude"] = it.location.latitude
 					filterMap["longitude"] = it.location.longitude
 					filterMap["aircraftMovements"] = it.aircraft_movements
+					
 					filterList.add(filterMap)
 				}
 				data = [ status: "success", statusCode: 200, data: filterList ]
