@@ -4,11 +4,65 @@
     <title>Place Autocomplete Address Form</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+    function getMarkers()
+    {	console.log("Inside markers...");
+    	var markers = [];//some array
+	 	$.ajax({url: "${createLink(controller:'Dashboard', action: 'interestpoints')}?&latitude=36.0857&longitude=-115.1541&radius=42", success: function(results){
+         	//window.eqfeed_callback = function(results) {
+                 for (var i = 0; i < results.data.length; i++) {
+                   var coords = results.data[i];
+                   var latLng = new google.maps.LatLng(coords.latitude,coords.longitude);
+                   var marker = new google.maps.Marker({
+                   		position: latLng,
+                   		map: map
+                   });
+                   markers.push(marker);
+                 }
+               //}
+
+                 var bounds = new google.maps.LatLngBounds();
+            	 for (var i = 0; i < markers.length; i++) {
+            	  bounds.extend(markers[i].getPosition());
+            	 }
+
+            	 map.fitBounds(bounds);
+         }});
+    	 
+    	 
+    }
+
+    var map;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 5,
+        center: new google.maps.LatLng(36,-115),
+        mapTypeId: 'terrain'
+      });
+
+      
+      // Create a <script> tag and set the USGS URL as the source.
+      var script = document.createElement('script');
+      // This example uses a local copy of the GeoJSON stored at
+      // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
+      //script.src = 'https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js';
+      //$("button2").click(function(){
+         
+      //});
+      document.getElementsByTagName('head')[0].appendChild(script);
+    }
+
+    // Loop through the results array and place a marker for each
+    // set of coordinates.
+    
+    </script>
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        height: 100%;
+        height: 50%;
+        width: 50%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -49,98 +103,25 @@
         height: 20px;
         margin-bottom: 2px;
       }
+      .mapLoc {
+        top: 40px;
+        margin-bottom: 2px;
+      }
     </style>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   </head>
 
   <body>
     <div id="locationField">
       <input id="autocomplete" placeholder="Enter your address"
              onFocus="geolocate()" type="text"></input><br>
-      <button id="search" onClick="getLocationDetails()">Search</button>
+      <button id="search" onClick="getLocationDetails()">Search</button><br>
+      <button id="button2" onClick="getMarkers()">markers</button><br>
     </div>
-
-   
-
-    <script>
-      // This example displays an address form, using the autocomplete feature
-      // of the Google Places API to help users fill in the information.
-
-      // This example requires the Places library. Include the libraries=places
-      // parameter when you first load the API. For example:
-      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
-      var MAP_API_KEY = "AIzaSyASzllYde2cO8z7gmUg5Wkez4asfgYc9hE";
-
-      var latitude, longitude;
-      var placeSearch, autocomplete;
-      var componentForm = {
-        street_number: 'short_name',
-        route: 'long_name',
-        locality: 'long_name',
-        administrative_area_level_1: 'short_name',
-        country: 'long_name',
-        postal_code: 'short_name'
-      };
-
-      function initAutocomplete() {
-        // Create the autocomplete object, restricting the search to geographical
-        // location types.
-        autocomplete = new google.maps.places.Autocomplete(
-            /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
-            {types: ['geocode']});
-
-        // When the user selects an address from the dropdown, populate the address
-        // fields in the form.
-        //autocomplete.addListener('place_changed', fillInAddress);
-
-      }
-
-      // Bias the autocomplete object to the user's geographical location,
-      // as supplied by the browser's 'navigator.geolocation' object.
-      function geolocate() {
-        if (navigator.geolocation) {
-          console.log(navigator.geolocation);
-          navigator.geolocation.getCurrentPosition(function(position) {
-
-              latitude = position.coords.latitude;
-              longitude = position.coords.latitude;
-  			
-            var geolocation = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-            var circle = new google.maps.Circle({
-              center: geolocation,
-              radius: position.coords.accuracy
-              
-            });
-            autocomplete.setBounds(circle.getBounds());
     
-          });
+     <div id="map" class="mapLoc"	></div>
 
-        }
-      }
-
-      function getLocationDetails()
-      { 
-
-        var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+ document.getElementById('autocomplete').value+"&key=" + MAP_API_KEY;
-        console.log(url);
-
-        $.get(url, function(response, status) {
-          console.log(response);
-        });
-
-        //https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY
-
-    	  console.log("latitude = ", latitude);
-    	  console.log("longitude = ", longitude);
-    	  
-      }
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASzllYde2cO8z7gmUg5Wkez4asfgYc9hE&callback=initMap">
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASzllYde2cO8z7gmUg5Wkez4asfgYc9hE&libraries=places&callback=initAutocomplete"
-        async defer></script>
-  </body>
+     </body>
 </html>
